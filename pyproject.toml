@@ -1,8 +1,11 @@
 [tool.poetry]
-name = "RSSchool_EvaluationSelection"
+name = "forest_ml"
 version = "0.1.0"
 description = "Homework for RS School Machine Learning course"
 authors = ["kmagritte <k.kshr@yandex.ru>"]
+
+[tool.poetry.scripts]
+train = "forest_ml.train:train"
 
 [tool.poetry.dependencies]
 python = "^3.9"
