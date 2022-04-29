@@ -5,14 +5,15 @@ description = "Homework for RS School Machine Learning course"
 authors = ["kmagritte <k.kshr@yandex.ru>"]
 
 [tool.poetry.scripts]
-train = "forest_ml.train:train"
+train = "src.forest_ml.train:train"
 
 [tool.poetry.dependencies]
 python = "^3.9"
 click = "^8.0.3"
-pandas = "^1.3.4"
+pandas = "1.3.5"
 sklearn = "^0.0"
 scikit-learn = "^1.0.1"
+pandas_profiling = "^3.1.0"
 
 [tool.poetry.dev-dependencies]
 black = "^21.11b1"
@@ -22,3 +23,4 @@ pytest = "^5.2"
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
