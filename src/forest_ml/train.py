@@ -3,6 +3,7 @@ import click
 import pandas as pd
 
 from .data import get_dataset
+from .pipeline import create_pipeline
 
 import warnings
 warnings.filterwarnings("ignore")
@@ -38,6 +39,12 @@ warnings.filterwarnings("ignore")
     type=bool,
     show_default=True,
 )
+@click.option(
+    "--type-scaler",
+    default='StandardScaler',
+    type=str,
+    show_default=True,
+)
 
 def train(
     dataset_path: Path,
@@ -45,6 +52,7 @@ def train(
     test_split_ratio: float,
     use_eda: bool,
     use_scaler: bool,
+    type_scaler: str,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -52,3 +60,7 @@ def train(
         test_split_ratio,
         use_eda,
     )
+
+    pipeline = create_pipeline(use_scaler, type_scaler, random_state)
+    pipeline.fit(features_train, target_train)
+    click.echo(pipeline)
