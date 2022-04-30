@@ -2,6 +2,8 @@ from pathlib import Path
 import click
 import pandas as pd
 
+from .data import get_dataset
+
 @click.command()
 @click.option(
     "-d",
@@ -12,5 +14,6 @@ import pandas as pd
 def train(
     dataset_path: Path
 ) -> None:
-    dataset = pd.read_csv(dataset_path)
-    click.echo(f"Dataset shape: {dataset.shape}.")
+    features_train, features_val, target_train, target_val = get_dataset(
+        dataset_path,
+    )
