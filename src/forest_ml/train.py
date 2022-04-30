@@ -45,6 +45,12 @@ warnings.filterwarnings("ignore")
     type=str,
     show_default=True,
 )
+@click.option(
+    "--type-model",
+    default='LogisticRegression',
+    type=str,
+    show_default=True,
+)
 
 def train(
     dataset_path: Path,
@@ -53,6 +59,7 @@ def train(
     use_eda: bool,
     use_scaler: bool,
     type_scaler: str,
+    type_model: str,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -61,6 +68,6 @@ def train(
         use_eda,
     )
 
-    pipeline = create_pipeline(use_scaler, type_scaler, random_state)
+    pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state)
     pipeline.fit(features_train, target_train)
     click.echo(pipeline)
