@@ -1,6 +1,7 @@
 from pathlib import Path
 import click
 import pandas as pd
+from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -71,3 +72,11 @@ def train(
     pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state)
     pipeline.fit(features_train, target_train)
     click.echo(pipeline)
+
+    accuracy = accuracy_score(target_val, pipeline.predict(features_val))
+    f1 = f1_score(target_val, pipeline.predict(features_val), average='macro') 
+    kappa_score = cohen_kappa_score(target_val, pipeline.predict(features_val))
+    click.echo(f"Accuracy: {accuracy},")
+    click.echo(f"F1 score: {f1},")
+    click.echo(f"Kappa score: {kappa_score}.")
+
