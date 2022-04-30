@@ -4,6 +4,9 @@ import pandas as pd
 
 from .data import get_dataset
 
+import warnings
+warnings.filterwarnings("ignore")
+
 @click.command()
 @click.option(
     "-d",
@@ -29,12 +32,19 @@ from .data import get_dataset
     type=bool,
     show_default=True,
 )
+@click.option(
+    "--use-scaler",
+    default=True,
+    type=bool,
+    show_default=True,
+)
 
 def train(
     dataset_path: Path,
     random_state: int,
     test_split_ratio: float,
     use_eda: bool,
+    use_scaler: bool,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
