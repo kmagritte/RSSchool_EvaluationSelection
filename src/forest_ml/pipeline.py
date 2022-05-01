@@ -6,7 +6,7 @@ from sklearn.linear_model import LogisticRegression
 
 def create_pipeline(
     use_scaler: bool, type_scaler: str, type_model: str, random_state: int, max_iter: int,
-    logreg_c: float,
+    logreg_c: float, n_estimators: int, max_depth: int,
 ) -> Pipeline:
     pipeline_steps = []
     if use_scaler and type_scaler.lower() == 'standardscaler':
@@ -20,7 +20,7 @@ def create_pipeline(
     if type_model.lower() == 'logisticregression':
         pipeline_steps.append(("classifier", LogisticRegression(random_state=random_state, max_iter=max_iter, C=logreg_c,)))
     elif type_model.lower() == 'randomforestclassifier':
-        pipeline_steps.append(("classifier", RandomForestClassifier()))
+        pipeline_steps.append(("classifier", RandomForestClassifier(random_state=random_state, n_estimators=n_estimators, max_depth=max_depth,)))
     else:
         click.echo('Error: Invalid classifier. The default option will be used.')
         pipeline_steps.append(("classifier", LogisticRegression(random_state=random_state, max_iter=max_iter, C=logreg_c,)))

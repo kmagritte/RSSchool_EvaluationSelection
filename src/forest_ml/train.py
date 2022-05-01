@@ -64,6 +64,18 @@ warnings.filterwarnings("ignore")
     type=float,
     show_default=True,
 )
+@click.option(
+    "--n-estimators",
+    default=100,
+    type=int,
+    show_default=True,
+)
+@click.option(
+    "--max-depth",
+    default=None,
+    type=int,
+    show_default=True,
+)
 
 def train(
     dataset_path: Path,
@@ -75,6 +87,8 @@ def train(
     type_model: str,
     max_iter: int,
     logreg_c: float,
+    n_estimators: int,
+    max_depth: int,
 ) -> None:
     features_train, features_val, target_train, target_val = get_dataset(
         dataset_path,
@@ -83,7 +97,7 @@ def train(
         use_eda,
     )
 
-    pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state, max_iter, logreg_c)
+    pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth)
     pipeline.fit(features_train, target_train)
     click.echo(pipeline)
 
