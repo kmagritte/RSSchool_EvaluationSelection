@@ -1,4 +1,5 @@
 from pathlib import Path
+from joblib import dump
 import click
 import pandas as pd
 from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score
@@ -15,6 +16,13 @@ warnings.filterwarnings("ignore")
     "--dataset-path",
     default="data/train.csv",  
     type=click.Path(exists=True, dir_okay=False, path_type=Path)
+)
+@click.option(
+    "-s",
+    "--save-model-path",
+    default="data/model.joblib",
+    type=click.Path(dir_okay=False, writable=True, path_type=Path),
+    show_default=True,
 )
 @click.option(
     "--random-state",
@@ -79,6 +87,7 @@ warnings.filterwarnings("ignore")
 
 def train(
     dataset_path: Path,
+    save_model_path: Path,
     random_state: int,
     test_split_ratio: float,
     use_eda: bool,
@@ -107,4 +116,6 @@ def train(
     click.echo(f"Accuracy: {accuracy},")
     click.echo(f"F1 score: {f1},")
     click.echo(f"Kappa score: {kappa_score}.")
+    dump(pipeline, save_model_path)
+    click.echo(f"Model is saved to {save_model_path}.")
 
