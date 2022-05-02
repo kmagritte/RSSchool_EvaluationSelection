@@ -2,7 +2,7 @@ from pathlib import Path
 from joblib import dump
 import click
 import pandas as pd
-from sklearn.metrics import accuracy_score, f1_score, cohen_kappa_score
+from sklearn.model_selection import KFold, cross_validate
 
 from .data import get_dataset
 from .pipeline import create_pipeline
@@ -31,9 +31,9 @@ warnings.filterwarnings("ignore")
     show_default=True,
 )
 @click.option(
-    "--test-split-ratio",
-    default=0.2,
-    type=click.FloatRange(0, 1, min_open=True, max_open=True),
+    "--n-splits",
+    default=5,
+    type=int,
     show_default=True,
 )
 @click.option(
@@ -89,7 +89,7 @@ def train(
     dataset_path: Path,
     save_model_path: Path,
     random_state: int,
-    test_split_ratio: float,
+    n_splits: int,
     use_eda: bool,
     use_scaler: bool,
     type_scaler: str,
@@ -99,23 +99,21 @@ def train(
     n_estimators: int,
     max_depth: int,
 ) -> None:
-    features_train, features_val, target_train, target_val = get_dataset(
+    features, target = get_dataset(
         dataset_path,
-        random_state,
-        test_split_ratio,
         use_eda,
     )
+    scoring = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
 
+    cv_outer = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
     pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth)
-    pipeline.fit(features_train, target_train)
+    scores = cross_validate(pipeline, features, target, scoring=scoring, cv=cv_outer)
     click.echo(pipeline)
-
-    accuracy = accuracy_score(target_val, pipeline.predict(features_val))
-    f1 = f1_score(target_val, pipeline.predict(features_val), average='macro') 
-    kappa_score = cohen_kappa_score(target_val, pipeline.predict(features_val))
-    click.echo(f"Accuracy: {accuracy},")
-    click.echo(f"F1 score: {f1},")
-    click.echo(f"Kappa score: {kappa_score}.")
+    
+    click.echo(f"Accuracy: {sum(scores['test_accuracy'])/n_splits},")
+    click.echo(f"F1 score: {sum(scores['test_f1_macro'])/n_splits},")
+    click.echo(f"Precision score: {sum(scores['test_precision_macro'])/n_splits},")
+    click.echo(f"Recall score: {sum(scores['test_recall_macro'])/n_splits}.")
     dump(pipeline, save_model_path)
     click.echo(f"Model is saved to {save_model_path}.")
 
