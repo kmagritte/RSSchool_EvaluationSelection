@@ -2,6 +2,8 @@ from pathlib import Path
 from joblib import dump
 import click
 import pandas as pd
+import mlflow
+import mlflow.sklearn
 from sklearn.model_selection import KFold, cross_validate
 
 from .data import get_dataset
