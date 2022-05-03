@@ -13,7 +13,7 @@ def create_pipeline(
         pipeline_steps.append(("scaler", StandardScaler()))
     elif use_scaler and type_scaler.lower() == 'minmaxscaler':
         pipeline_steps.append(("scaler", MinMaxScaler()))
-    else:
+    elif use_scaler:
         click.echo('Error: Invalid scaler. The default option will be used.')
         pipeline_steps.append(("scaler", StandardScaler()))
 
