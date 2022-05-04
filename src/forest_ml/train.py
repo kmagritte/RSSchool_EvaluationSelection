@@ -58,6 +58,18 @@ warnings.filterwarnings("ignore")
     show_default=True,
 )
 @click.option(
+    "--use-feature-engineering",
+    default=False,
+    type=bool,
+    show_default=True,
+)
+@click.option(
+    "--type-feature-engineering",
+    default='PCA',
+    type=str,
+    show_default=True,
+)
+@click.option(
     "--type-model",
     default='LogisticRegression',
     type=str,
@@ -86,7 +98,7 @@ warnings.filterwarnings("ignore")
     default=None,
     type=int,
     show_default=True,
-)
+)    
 
 def train(
     dataset_path: Path,
@@ -96,6 +108,8 @@ def train(
     use_eda: bool,
     use_scaler: bool,
     type_scaler: str,
+    use_feature_engineering: bool,
+    type_feature_engineering: str,
     type_model: str,
     max_iter: int,
     logreg_c: float,
@@ -110,7 +124,8 @@ def train(
         scoring = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
 
         cv_outer = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
-        pipeline = create_pipeline(use_scaler, type_scaler, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth)
+        pipeline = create_pipeline(use_scaler, type_scaler, 
+        use_feature_engineering, type_feature_engineering, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth)
         scores = cross_validate(pipeline, features, target, scoring=scoring, cv=cv_outer)
         click.echo(pipeline)
         click.echo(f"Accuracy: {np.mean(scores['test_accuracy'])},")
@@ -136,6 +151,12 @@ def train(
             mlflow.log_param("type_scaler", pipeline['scaler'])
         else:
             mlflow.log_param("type_scaler", None)
+
+        mlflow.log_param("use_feature_engineering", use_feature_engineering)
+        if use_feature_engineering:
+            mlflow.log_param("type_feature_engineering", pipeline['feature_engineering'])
+        else:
+            mlflow.log_param("type_feature_engineering", None)    
 
         mlflow.log_metric("Accuracy", np.mean(scores['test_accuracy']))
         mlflow.log_metric("F1", np.mean(scores['test_f1_macro']))
