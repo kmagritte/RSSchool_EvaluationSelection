@@ -48,3 +48,6 @@ poetry run train --help
 ```sh
 poetry run mlflow ui
 ```
+The results of my experiments:
+![image](https://user-images.githubusercontent.com/98235486/166881592-4b688001-5ead-4a7d-a891-a139101d049e.png)
+
