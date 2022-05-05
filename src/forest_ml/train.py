@@ -76,6 +76,12 @@ warnings.filterwarnings("ignore")
     show_default=True,
 )
 @click.option(
+    "--hyperparameter-search",
+    default=True,
+    type=bool,
+    show_default=True,
+)
+@click.option(
     "--max-iter",
     default=100,
     type=int,
@@ -110,6 +116,7 @@ def train(
     type_scaler: str,
     use_feature_engineering: bool,
     type_feature_engineering: str,
+    hyperparameter_search: bool,
     type_model: str,
     max_iter: int,
     logreg_c: float,
@@ -122,10 +129,10 @@ def train(
     )
     with mlflow.start_run():
         scoring = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
-
         cv_outer = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
         pipeline = create_pipeline(use_scaler, type_scaler, 
-        use_feature_engineering, type_feature_engineering, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth)
+        use_feature_engineering, type_feature_engineering, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth, 
+        hyperparameter_search)
         scores = cross_validate(pipeline, features, target, scoring=scoring, cv=cv_outer)
         click.echo(pipeline)
         click.echo(f"Accuracy: {np.mean(scores['test_accuracy'])},")
@@ -133,19 +140,22 @@ def train(
         click.echo(f"Precision score: {np.mean(scores['test_precision_macro'])},")
         click.echo(f"Recall score: {np.mean(scores['test_recall_macro'])}.")
 
-        if type_model.lower() == 'randomforestclassifier':
-            mlflow.log_param("n_estimators", n_estimators)
-            mlflow.log_param("max_depth", max_depth)
-            mlflow.log_param("max_iter", None)
-            mlflow.log_param("logreg_c", None)
-
+        if hyperparameter_search:
+            mlflow.log_param("hyperparameter_search", hyperparameter_search)
         else:
-            mlflow.log_param("n_estimators", None)
-            mlflow.log_param("max_depth", None)
-            mlflow.log_param("max_iter", max_iter)
-            mlflow.log_param("logreg_c", logreg_c)
-            
-        
+            mlflow.log_param("hyperparameter_search", hyperparameter_search)
+            if type_model.lower() == 'randomforestclassifier':
+                mlflow.log_param("n_estimators", n_estimators)
+                mlflow.log_param("max_depth", max_depth)
+                mlflow.log_param("max_iter", None)
+                mlflow.log_param("logreg_c", None)
+
+            else:
+                mlflow.log_param("n_estimators", None)
+                mlflow.log_param("max_depth", None)
+                mlflow.log_param("max_iter", max_iter)
+                mlflow.log_param("logreg_c", logreg_c)
+
         mlflow.log_param("use_scaler", use_scaler)
         if use_scaler:
             mlflow.log_param("type_scaler", pipeline['scaler'])
