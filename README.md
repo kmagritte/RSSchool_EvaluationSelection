@@ -40,14 +40,25 @@ Change the method
 ```sh
 poetry run train --type-feature-engineering=LogisticRegression
 ```
+To disable automatic hyperparameter search and configure them yourself
+```sh
+poetry run train --hyperparameter-search=False
+```
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
 ```
-6. Run MLflow UI to see the information about experiments you conducted:
+6. If you want to get an EDA report with pandas profiling, the command should look like this
+```sh
+poetry run train --use-eda=True
+```
+The report will be saved to the root of the project.
+
+7. Run MLflow UI to see the information about experiments you conducted:
 ```sh
 poetry run mlflow ui
 ```
 The results of my experiments:
 ![image](https://user-images.githubusercontent.com/98235486/166881592-4b688001-5ead-4a7d-a891-a139101d049e.png)
 
+The following model showed itself better: *RandomForestClassifier(random_state=42, n_estimators=500, max_depth=250)* with StandardScaler and without feature engineering.
