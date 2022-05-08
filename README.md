@@ -101,7 +101,7 @@ poetry run flake8 --max-line-length=90 tests
 ```
 The check will be passed if you add a parameter to the command --max-line-length=90.
 
-4. Implemented are type annotated and used correctly throughout the code, you can check using the command:
+4. Implemented are type annotated and used correctly throughout the code, you can check this with the command:
 ```
 poetry run mypy src
 ```
