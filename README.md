@@ -87,3 +87,6 @@ poetry run black src
 poetry run black tests
 ```
 Validate passed:
+![image](https://user-images.githubusercontent.com/98235486/167308936-3b55f566-b885-40ef-847c-7dfa914abe5c.png)
+![image](https://user-images.githubusercontent.com/98235486/167308949-2c0c0bc3-578f-41ea-884b-9e2f54ead910.png)
+
