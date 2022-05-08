@@ -92,3 +92,11 @@ Validate passed:
 
 ![image](https://user-images.githubusercontent.com/98235486/167308949-2c0c0bc3-578f-41ea-884b-9e2f54ead910.png)
 
+3. Formatting code with flake8
+```
+poetry run flake8 --max-line-length=90 src
+```
+```
+poetry run flake8 --max-line-length=90 tests
+```
+The check will be passed if you add a parameter to the command --max-line-length=90.
