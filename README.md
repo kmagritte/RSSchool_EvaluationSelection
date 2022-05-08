@@ -44,6 +44,8 @@ To disable automatic hyperparameter search and configure them yourself
 ```sh
 poetry run train --hyperparameter-search=False
 ```
+*Note!!!*  I advise you to disable automatic selection of hyperparameters. The duration of the execution is more than an hour.
+
 You can configure additional options (such as hyperparameters) in the CLI. To get a full list of them, use help:
 ```sh
 poetry run train --help
@@ -62,3 +64,18 @@ The results of my experiments:
 ![image](https://user-images.githubusercontent.com/98235486/166881592-4b688001-5ead-4a7d-a891-a139101d049e.png)
 
 The following model showed itself better: *RandomForestClassifier(random_state=42, n_estimators=500, max_depth=250)* with StandardScaler and without feature engineering.
+
+## Development
+
+Install all requirements (including dev requirements) to poetry environment:
+```
+poetry install
+```
+Now you can use developer instruments, e.g. pytest:
+```
+poetry run pytest
+```
+To disable warnings, use the following command
+```
+poetry run pytest --disable-warnings
+```
