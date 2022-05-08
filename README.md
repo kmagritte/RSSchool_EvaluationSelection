@@ -106,3 +106,4 @@ The check will be passed if you add a parameter to the command --max-line-length
 poetry run mypy src
 ```
 
+![image](https://user-images.githubusercontent.com/98235486/167311420-ddc58f2f-f71c-4b38-8178-57e3eefc6f94.png)
