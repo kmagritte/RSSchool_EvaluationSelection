@@ -71,7 +71,7 @@ Install all requirements (including dev requirements) to poetry environment:
 ```
 poetry install
 ```
-Now you can use developer instruments, e.g. pytest:
+1. Now you can use developer instruments, e.g. pytest:
 ```
 poetry run pytest
 ```
@@ -79,3 +79,11 @@ To disable warnings, use the following command
 ```
 poetry run pytest --disable-warnings
 ```
+2. Formatting code with black
+```
+poetry run black src
+```
+```
+poetry run black tests
+```
+Validate passed:

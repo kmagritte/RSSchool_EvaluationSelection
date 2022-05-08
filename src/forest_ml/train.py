@@ -11,14 +11,16 @@ from .data import get_dataset
 from .pipeline import create_pipeline
 
 import warnings
+
 warnings.filterwarnings("ignore")
+
 
 @click.command()
 @click.option(
     "-d",
     "--dataset-path",
-    default="data/train.csv",  
-    type=click.Path(exists=True, dir_okay=False, path_type=Path)
+    default="data/train.csv",
+    type=click.Path(exists=True, dir_okay=False, path_type=Path),
 )
 @click.option(
     "-s",
@@ -53,7 +55,7 @@ warnings.filterwarnings("ignore")
 )
 @click.option(
     "--type-scaler",
-    default='StandardScaler',
+    default="StandardScaler",
     type=str,
     show_default=True,
 )
@@ -65,13 +67,13 @@ warnings.filterwarnings("ignore")
 )
 @click.option(
     "--type-feature-engineering",
-    default='PCA',
+    default="PCA",
     type=str,
     show_default=True,
 )
 @click.option(
     "--type-model",
-    default='LogisticRegression',
+    default="LogisticRegression",
     type=str,
     show_default=True,
 )
@@ -104,8 +106,7 @@ warnings.filterwarnings("ignore")
     default=None,
     type=int,
     show_default=True,
-)    
-
+)
 def train(
     dataset_path: Path,
     save_model_path: Path,
@@ -128,12 +129,24 @@ def train(
         use_eda,
     )
     with mlflow.start_run():
-        scoring = ['accuracy', 'f1_macro', 'precision_macro', 'recall_macro']
+        scoring = ["accuracy", "f1_macro", "precision_macro", "recall_macro"]
         cv_outer = KFold(n_splits=n_splits, shuffle=True, random_state=random_state)
-        pipeline = create_pipeline(use_scaler, type_scaler, 
-        use_feature_engineering, type_feature_engineering, type_model, random_state, max_iter, logreg_c, n_estimators, max_depth, 
-        hyperparameter_search)
-        scores = cross_validate(pipeline, features, target, scoring=scoring, cv=cv_outer)
+        pipeline = create_pipeline(
+            use_scaler,
+            type_scaler,
+            use_feature_engineering,
+            type_feature_engineering,
+            type_model,
+            random_state,
+            max_iter,
+            logreg_c,
+            n_estimators,
+            max_depth,
+            hyperparameter_search,
+        )
+        scores = cross_validate(
+            pipeline, features, target, scoring=scoring, cv=cv_outer
+        )
         click.echo(pipeline)
         click.echo(f"Accuracy: {np.mean(scores['test_accuracy'])},")
         click.echo(f"F1 score: {np.mean(scores['test_f1_macro'])},")
@@ -144,7 +157,7 @@ def train(
             mlflow.log_param("hyperparameter_search", hyperparameter_search)
         else:
             mlflow.log_param("hyperparameter_search", hyperparameter_search)
-            if type_model.lower() == 'randomforestclassifier':
+            if type_model.lower() == "randomforestclassifier":
                 mlflow.log_param("n_estimators", n_estimators)
                 mlflow.log_param("max_depth", max_depth)
                 mlflow.log_param("max_iter", None)
@@ -158,23 +171,24 @@ def train(
 
         mlflow.log_param("use_scaler", use_scaler)
         if use_scaler:
-            mlflow.log_param("type_scaler", pipeline['scaler'])
+            mlflow.log_param("type_scaler", pipeline["scaler"])
         else:
             mlflow.log_param("type_scaler", None)
 
         mlflow.log_param("use_feature_engineering", use_feature_engineering)
         if use_feature_engineering:
-            mlflow.log_param("type_feature_engineering", pipeline['feature_engineering'])
+            mlflow.log_param(
+                "type_feature_engineering", pipeline["feature_engineering"]
+            )
         else:
-            mlflow.log_param("type_feature_engineering", None)    
+            mlflow.log_param("type_feature_engineering", None)
 
-        mlflow.log_metric("Accuracy", np.mean(scores['test_accuracy']))
-        mlflow.log_metric("F1", np.mean(scores['test_f1_macro']))
-        mlflow.log_metric("Precision", np.mean(scores['test_precision_macro']))
-        mlflow.log_metric("Recall", np.mean(scores['test_recall_macro']))
+        mlflow.log_metric("Accuracy", np.mean(scores["test_accuracy"]))
+        mlflow.log_metric("F1", np.mean(scores["test_f1_macro"]))
+        mlflow.log_metric("Precision", np.mean(scores["test_precision_macro"]))
+        mlflow.log_metric("Recall", np.mean(scores["test_recall_macro"]))
 
-        mlflow.sklearn.log_model(pipeline, "model") 
+        mlflow.sklearn.log_model(pipeline, "model")
 
         dump(pipeline, save_model_path)
         click.echo(f"Model is saved to {save_model_path}.")
-
