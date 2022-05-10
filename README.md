@@ -107,3 +107,10 @@ poetry run mypy src
 ```
 
 ![image](https://user-images.githubusercontent.com/98235486/167311420-ddc58f2f-f71c-4b38-8178-57e3eefc6f94.png)
+
+5. More conveniently, to run all sessions of testing and formatting in a single command, use nox:
+```
+poetry run nox
+```
+
+![image](https://user-images.githubusercontent.com/98235486/167603302-56dbd047-a2bd-46b7-9a58-5960af1d49ee.png)
