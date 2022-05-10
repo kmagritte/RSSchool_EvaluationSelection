@@ -114,3 +114,7 @@ poetry run nox
 ```
 
 ![image](https://user-images.githubusercontent.com/98235486/167603302-56dbd047-a2bd-46b7-9a58-5960af1d49ee.png)
+
+6. Created github actions for auto-validate project 
+
+[![Tests and linters](https://github.com/kmagritte/RSSchool_EvaluationSelection/actions/workflows/main.yml/badge.svg)](https://github.com/kmagritte/RSSchool_EvaluationSelection/actions/workflows/main.yml)
