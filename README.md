@@ -111,6 +111,8 @@ poetry run mypy tests
 
 ![image](https://user-images.githubusercontent.com/98235486/167311420-ddc58f2f-f71c-4b38-8178-57e3eefc6f94.png)
 
+![image](https://user-images.githubusercontent.com/98235486/167827958-31914c61-6f96-4253-9f2d-71d6801f08b8.png)
+
 5. More conveniently, to run all sessions of testing and formatting in a single command, use nox:
 ```
 poetry run nox
