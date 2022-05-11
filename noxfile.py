@@ -8,7 +8,7 @@ from nox.sessions import Session
 
 
 nox.options.sessions = "black", "flake8", "mypy", "tests"
-locations = "src", "noxfile.py"
+locations = "src", "noxfile.py", "tests"
 
 
 def install_with_constraints(session: Session, *args: str, **kwargs: Any) -> None:

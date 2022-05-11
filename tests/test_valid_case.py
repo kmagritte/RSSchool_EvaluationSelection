@@ -41,7 +41,7 @@ def test_model(runner: CliRunner) -> None:
                 "-s",
                 "model.joblib",
                 "--hyperparameter-search",
-                False,
+                "False",
             ],
         )
         loaded_model = load("model.joblib")
